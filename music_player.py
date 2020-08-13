@@ -29,8 +29,11 @@ class MusicPlayer:
         if new_pointer >= 0 and new_pointer < len(self._song_list): #Posición máxima, Len(lista) -1.
             self._pointer = new_pointer
     
+    def get_current_song(self):
+        return self._path + self._song_list[self._pointer]
+    
     def play(self):
-        mixer.music.load(self._path + self._song_list[self._pointer]) #Carga la canción en el string path + canción.mp3
+        mixer.music.load(self.get_current_song) #Carga la canción en el string path + canción.mp3
         mixer.music.play() #Empieza la canción.
 
     def resume(self):
