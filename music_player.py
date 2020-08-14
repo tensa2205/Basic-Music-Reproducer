@@ -1,6 +1,7 @@
 from pygame import mixer
 import os
 
+
 class MusicPlayer:
 
     def __init__(self):
@@ -18,22 +19,26 @@ class MusicPlayer:
         self.__set_list(directory)
 
     def __set_list(self,dir):
+        new_list = []
+        list_aux = []
         try:
             list_aux = os.listdir(dir)
         except:
             None
         for file in list_aux:
-            if file[-3:] == 'mp3': self._song_list.append(file)
+            if file[-3:] == 'mp3': new_list.append(file)
+        self._song_list = new_list.copy()
 
     def set_pointer(self, new_pointer):
         if new_pointer >= 0 and new_pointer < len(self._song_list): #Posición máxima, Len(lista) -1.
             self._pointer = new_pointer
     
     def get_current_song(self):
-        return self._path + self._song_list[self._pointer]
+        return self._path + '/' + self._song_list[self._pointer]
     
     def play(self):
-        mixer.music.load(self.get_current_song) #Carga la canción en el string path + canción.mp3
+        print(self.get_current_song())
+        mixer.music.load(self.get_current_song()) #Carga la canción en el string path + canción.mp3
         mixer.music.play() #Empieza la canción.
 
     def resume(self):
@@ -44,7 +49,7 @@ class MusicPlayer:
     
     def stop(self):
         mixer.music.stop() #Pausa la canción pero no hace el unload
-        mixer.music.unload() #Hago el unload
+        #mixer.music.unload() #Hago el unload
 
     def repeat(self):
         mixer.music.rewind() #Repite la canción
@@ -63,3 +68,6 @@ class MusicPlayer:
             self.play()
         else:
             self.play()
+    
+    def set_volume(self,new_volume):
+        mixer.music.set_volume(new_volume * 0.01)

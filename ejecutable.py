@@ -1,40 +1,23 @@
 import PySimpleGUI as sg
-import os
+from tinytag import TinyTag
 from music_player import MusicPlayer
+from convert import convert_to_bytes
+from layout_generator import get_layout
+
 sg.theme('Default1')
 
+def set_metadata(window,player):
+    tag = TinyTag.get(player.get_current_song(),image=True)
+    artist = tag.artist
+    image = convert_to_bytes(tag.get_image(),resize = (210,210))
+    window['-TITULO-'].update(tag.title)
+    if artist != window['-ARTISTA-']: #cambia el artista
+        window['-ARTISTA-'].update(tag.artist)
+    if image != window['-CARATULA-']:
+        window['-CARATULA-'].update(data = image)
+
 def main():
-    caratula = [[sg.Image(filename='resources/defecto.png',size=(210,210),key='-CARATULA-')]]
-    volumen = [
-        [sg.Text(' '*3),sg.Slider(range=(1,100),default_value = 50,size = (15,6),key = 'volumen',enable_events = True,visible = False,orientation='horizontal')]
-    ]
-    controllers = [
-        [sg.Button(image_filename='resources/list.png',border_width=0,size = (1,1),key = '-LIST-'),sg.Text(' '*50),sg.Button(image_filename='resources/volume.png',border_width=0,size = (1,1),key = '-VOLUME-')]
-    ]
-    principal = [
-        [sg.Text(' '*15) ,sg.Button(image_filename = 'resources/stop.png',border_width=0,size = (1,1),key = '-STOP-',disabled = True)],
-        [sg.Text(' '*2), sg.Button(image_filename = 'resources/restart.png',border_width=0,size = (1,1), key = '-RESTART-',disabled = True), sg.Button(image_filename = 'resources/play.png',border_width=0,size = (1,1),key = '-PLAY-',disabled = True),sg.Button(image_filename = 'resources/next.png', border_width=0,size = (11,1), key = '-NEXT-',disabled = True)],
-        [sg.Text(' '*15), sg.Button(image_filename = 'resources/pause.png',border_width=0, size= (1,1), key = '-PAUSE-',disabled = True)]
-    ]
-    title = [
-        [sg.Text(' '*10),sg.Text('Automatic',font = (None,14), key = '-TITULO-',justification = 'center')],
-        [sg.Text(' '*11),sg.Text('Red Velvet',font = (None,10), key = '-ARTISTA-',justification = 'center')]
-    ]
-
-    search_end = [
-        [sg.In(visible = False,enable_events=True,key='-FOLDER-'),sg.FolderBrowse(),sg.Text(' '*48), sg.Button(image_filename='resources/exit.png', border_width=0, key = '-EXIT-')],
-    ]
-
-    layout = [
-        [sg.Text(' '*11),sg.Column(caratula)],
-        [sg.Column(controllers)],
-        [sg.Text(' '*11),sg.Column(volumen)],
-        [sg.Text(' '*11),sg.Column(principal)],
-        [sg.Text(' '*11),sg.Column(title)],
-        [sg.Column(search_end)],
-    ]
-
-    file_list = [] 
+    layout = get_layout()
 
     window = sg.Window('Basic Music Reproducer', layout, size = (350,590))
     
@@ -50,10 +33,13 @@ def main():
             break
 
         if event == '-PLAY-':
-            if play_switch: #Play
+            if play_switch: #Play , DEBO cambiar imagen y etc. a ver si messirve
                 player.play()
+                set_metadata(window,player)
+                play_switch = False
             else: #Resume
                 player.resume()
+                play_switch = True
 
         elif event == '-PAUSE-':
             player.pause()
@@ -66,6 +52,7 @@ def main():
 
         elif event  == '-NEXT-':
             player.next_song()
+            set_metadata(window,player)
 
         if event == '-LIST':
             pass
@@ -77,16 +64,17 @@ def main():
             else:
                 window['volumen'].update(visible = False)
                 volume_switch = True
-                
-        if event == 'volumen': #Se cambió el volumen supongo.
 
+        if event == 'volumen': #Se cambió el volumen supongo.
+            player.set_volume(values['volumen'])
         if event == '-FOLDER-':
             player.set_path(values['-FOLDER-'])
-            window['-PLAY-'].update(disabled = False)
-            window['-PAUSE-'].update(disabled = False)
-            window['-STOP-'].update(disabled = False)
-            window['-RESTART-'].update(disabled = False)
-            window['-NEXT-'].update(disabled = False)
+            if values['-FOLDER-'] != '':
+                window['-PLAY-'].update(disabled = False)
+                window['-PAUSE-'].update(disabled = False)
+                window['-STOP-'].update(disabled = False)
+                window['-RESTART-'].update(disabled = False)
+                window['-NEXT-'].update(disabled = False)
     
     window.close()
 

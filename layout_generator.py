@@ -3,7 +3,7 @@ def get_layout():
 
     caratula = [[sg.Image(filename='resources/defecto.png',size=(210,210),key='-CARATULA-')]]
     volumen = [
-        [sg.Text(' '*3),sg.Slider(range=(1,100),default_value = 50,size = (15,6),key = 'volumen',enable_events = True,visible = False,orientation='horizontal')]
+        [sg.Text(' '*3),sg.Slider(range=(1,100),default_value = 100,size = (15,7),key = 'volumen',enable_events = True,visible = False,orientation='horizontal')]
     ]
     controllers = [
         [sg.Button(image_filename='resources/list.png',border_width=0,size = (1,1),key = '-LIST-'),sg.Text(' '*50),sg.Button(image_filename='resources/volume.png',border_width=0,size = (1,1),key = '-VOLUME-')]
@@ -14,8 +14,8 @@ def get_layout():
         [sg.Text(' '*15), sg.Button(image_filename = 'resources/pause.png',border_width=0, size= (1,1), key = '-PAUSE-',disabled = True)]
     ]
     title = [
-        [sg.Text(' '*6),sg.Text('Unknown song',font = (None,14), key = '-TITULO-',justification = 'center')],
-        [sg.Text(' '*7),sg.Text('Unknown artist',font = (None,10), key = '-ARTISTA-',justification = 'center')]
+        [sg.Text('Unknown song',font = (None,14), key = '-TITULO-',justification = 'center',size = (20,1),background_color='#C5D1D6')],
+        [sg.Text('Unknown artist',font = (None,11), key = '-ARTISTA-',justification = 'center',size = (20,1),background_color='#C5D1D6')]
     ]
 
     search_end = [
@@ -23,11 +23,11 @@ def get_layout():
     ]
 
     layout = [
-        [sg.Text(' '*11),sg.Column(caratula)],
+        [sg.Column(caratula,justification= 'center')],
         [sg.Column(controllers)],
         [sg.Text(' '*11),sg.Column(volumen)],
         [sg.Text(' '*11),sg.Column(principal)],
-        [sg.Text(' '*11),sg.Column(title)],
+        [sg.Column(title,background_color='#C5D1D6',justification='center')],
         [sg.Column(search_end)],
     ]
     return layout
