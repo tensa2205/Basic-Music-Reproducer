@@ -6,7 +6,7 @@ def get_layout():
         [sg.Text(' '*3),sg.Slider(range=(1,100),default_value = 100,size = (15,7),key = 'volumen',enable_events = True,visible = False,orientation='horizontal')]
     ]
     controllers = [
-        [sg.Button(image_filename='resources/list.png',border_width=0,size = (1,1),key = '-LIST-'),sg.Text(' '*50),sg.Button(image_filename='resources/volume.png',border_width=0,size = (1,1),key = '-VOLUME-')]
+        [sg.Button(image_filename='resources/list.png',border_width=0,size = (1,1),key = '-LIST-',disabled = True),sg.Text(' '*50),sg.Button(image_filename='resources/volume.png',border_width=0,size = (1,1),key = '-VOLUME-')]
     ]
     principal = [
         [sg.Text(' '*15) ,sg.Button(image_filename = 'resources/stop.png',border_width=0,size = (1,1),key = '-STOP-',disabled = True)],

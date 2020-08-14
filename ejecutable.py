@@ -3,6 +3,7 @@ from tinytag import TinyTag
 from music_player import MusicPlayer
 from convert import convert_to_bytes
 from layout_generator import get_layout
+import choose_from_list as list_songs_window
 
 sg.theme('Default1')
 
@@ -54,8 +55,14 @@ def main():
             player.next_song()
             set_metadata(window,player)
 
-        if event == '-LIST':
-            pass
+        if event == '-LIST-':
+            window.hide()
+            choice = list_songs_window.main(player.get_all_paths())
+            window.un_hide()
+            if choice != None:
+                player.set_pointer(choice)
+                player.play()
+                set_metadata(window,player)
 
         if event == '-VOLUME-':
             if volume_switch:
@@ -65,16 +72,18 @@ def main():
                 window['volumen'].update(visible = False)
                 volume_switch = True
 
-        if event == 'volumen': #Se cambió el volumen supongo.
+        if event == 'volumen': #Se cambió el volumen.
             player.set_volume(values['volumen'])
+
         if event == '-FOLDER-':
             player.set_path(values['-FOLDER-'])
-            if values['-FOLDER-'] != '':
+            if values['-FOLDER-'] != '' and player.get_availability() :
                 window['-PLAY-'].update(disabled = False)
                 window['-PAUSE-'].update(disabled = False)
                 window['-STOP-'].update(disabled = False)
                 window['-RESTART-'].update(disabled = False)
                 window['-NEXT-'].update(disabled = False)
+                window['-LIST-'].update(disabled = False)
     
     window.close()
 

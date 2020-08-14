@@ -9,6 +9,7 @@ class MusicPlayer:
         self._path = ''
         self._song_list = []
         self._pointer = None
+        self._available = False
     
     def set_path(self,directory):
         '''
@@ -21,13 +22,18 @@ class MusicPlayer:
     def __set_list(self,dir):
         new_list = []
         list_aux = []
+
         try:
             list_aux = os.listdir(dir)
         except:
             None
         for file in list_aux:
-            if file[-3:] == 'mp3': new_list.append(file)
-        self._song_list = new_list.copy()
+            if file[-3:] == 'mp3': 
+                new_list.append(file)
+
+        if new_list: #Chequea sí la lista tiene elementos.
+            self._song_list = new_list.copy()
+            self._available = True
 
     def set_pointer(self, new_pointer):
         if new_pointer >= 0 and new_pointer < len(self._song_list): #Posición máxima, Len(lista) -1.
@@ -35,6 +41,9 @@ class MusicPlayer:
     
     def get_current_song(self):
         return self._path + '/' + self._song_list[self._pointer]
+
+    def get_availability(self):
+        return self._available
     
     def play(self):
         print(self.get_current_song())
@@ -71,3 +80,10 @@ class MusicPlayer:
     
     def set_volume(self,new_volume):
         mixer.music.set_volume(new_volume * 0.01)
+
+    def get_all_paths(self):
+        songs = []
+        for song in self._song_list:
+            aux_str = self._path + '/' + song
+            songs.append(aux_str)
+        return songs
