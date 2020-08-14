@@ -24,8 +24,8 @@ def main():
 
     player = MusicPlayer()
 
-    play_switch = True
     volume_switch = True
+    is_playing = True
     
     while True:
         event,values = window.read()
@@ -33,16 +33,16 @@ def main():
             break
 
         if event == '-PLAY-':
-            if play_switch: #Play , DEBO cambiar imagen y etc. a ver si messirve
+            if is_playing: #Play , DEBO cambiar imagen y etc. a ver si messirve
                 player.play()
                 set_metadata(window,player)
-                play_switch = False
             else: #Resume
                 player.resume()
-                play_switch = True
+                is_playing = True
 
         elif event == '-PAUSE-':
             player.pause()
+            is_playing = False
 
         elif event == '-STOP-':
             player.stop()
