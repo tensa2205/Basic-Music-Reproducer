@@ -1,15 +1,4 @@
 import PySimpleGUI as sg 
-from tinytag import TinyTag
-
-def get_list(original_list):
-    new_list = []
-
-    for song in original_list:
-        metadata = TinyTag.get(song)
-        aux = metadata.title + ' - ' + metadata.artist
-        new_list.append(aux)
-    
-    return new_list
 
 def set_layout(songs):
     title = [[sg.Text('Song List', font = (None,15), justification = 'center')]]
@@ -27,9 +16,7 @@ def set_layout(songs):
     return layout
 
 
-def main(song_list):
-
-    beautiful_list = get_list(song_list)
+def main(beautiful_list):
 
     layout = set_layout(beautiful_list)
 

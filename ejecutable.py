@@ -10,7 +10,10 @@ sg.theme('Default1')
 def set_metadata(window,player):
     tag = TinyTag.get(player.get_current_song(),image=True)
     artist = tag.artist
-    image = convert_to_bytes(tag.get_image(),resize = (210,210))
+    try:
+        image = convert_to_bytes(tag.get_image(),resize = (210,210))
+    except:
+        image = 'resources/defecto.png'
     window['-TITULO-'].update(tag.title)
     if artist != window['-ARTISTA-']: #cambia el artista
         window['-ARTISTA-'].update(tag.artist)
@@ -57,7 +60,7 @@ def main():
 
         if event == '-LIST-':
             window.hide()
-            choice = list_songs_window.main(player.get_all_paths())
+            choice = list_songs_window.main(player._beautiful_list)
             window.un_hide()
             if choice != None:
                 player.set_pointer(choice)

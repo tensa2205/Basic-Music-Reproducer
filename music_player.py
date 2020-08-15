@@ -1,4 +1,5 @@
 from pygame import mixer
+from tinytag import TinyTag
 import os
 
 
@@ -7,9 +8,10 @@ class MusicPlayer:
     def __init__(self):
         mixer.init()
         self._path = ''
-        self._song_list = []
         self._pointer = None
         self._available = False
+        self._path_songs = []
+        self._beautiful_list = []
     
     def set_path(self,directory):
         '''
@@ -27,20 +29,22 @@ class MusicPlayer:
             list_aux = os.listdir(dir)
         except:
             None
-        for file in list_aux:
-            if file[-3:] == 'mp3': 
-                new_list.append(file)
+            
+        new_list = [self._path + '/' + file for file in list_aux if file[-3:] == 'mp3']
 
         if new_list: #Chequea sí la lista tiene elementos.
-            self._song_list = new_list.copy()
+            self._path_songs = new_list.copy()
             self._available = True
+            self.__set_beautiful_list()
+        else:
+            self._available = False
 
     def set_pointer(self, new_pointer):
-        if new_pointer >= 0 and new_pointer < len(self._song_list): #Posición máxima, Len(lista) -1.
+        if new_pointer >= 0 and new_pointer < len(self._path_songs): #Posición máxima, Len(lista) -1.
             self._pointer = new_pointer
     
     def get_current_song(self):
-        return self._path + '/' + self._song_list[self._pointer]
+        return self._path_songs[self._pointer]
 
     def get_availability(self):
         return self._available
@@ -67,7 +71,7 @@ class MusicPlayer:
         ''' Sí la canción está en stream activo (sonando o en pause), debería detenerla y avanzar a la siguiente,
                 caso contrario -> hago play.
         '''
-        if self._pointer == (len(self._song_list) -1): #Sí mi puntero está al final, debo volverlo al inicio de nuevo.
+        if self._pointer == (len(self._path_songs) -1): #Sí mi puntero está al final, debo volverlo al inicio de nuevo.
             self._pointer = 0
         else: #Sino sigo avanzando en 1.
             self._pointer += 1
@@ -82,8 +86,14 @@ class MusicPlayer:
         mixer.music.set_volume(new_volume * 0.01)
 
     def get_all_paths(self):
-        songs = []
-        for song in self._song_list:
-            aux_str = self._path + '/' + song
-            songs.append(aux_str)
-        return songs
+        return self._path_songs
+    
+    def __set_beautiful_list(self):
+        new_list = []
+
+        for song in self._path_songs:
+            metadata = TinyTag.get(song)
+            aux = metadata.title + ' - ' + metadata.artist
+            new_list.append(aux)
+    
+        self._beautiful_list = new_list.copy()
