@@ -5,6 +5,7 @@ import os
 
 class MusicPlayer:
 
+
     def __init__(self):
         mixer.init()
         self._path = ''
@@ -12,6 +13,7 @@ class MusicPlayer:
         self._available = False
         self._path_songs = []
         self._beautiful_list = []
+        self._supported_formats = ('mp3','flac','ogg','wav')
     
     def set_path(self,directory):
         '''
@@ -29,8 +31,8 @@ class MusicPlayer:
             list_aux = os.listdir(dir)
         except:
             None
-            
-        new_list = [self._path + '/' + file for file in list_aux if file[-3:] == 'mp3']
+        
+        new_list = [self._path + '/' + file for file in list_aux if file[-3:] in self._supported_formats or file[-4:] in self._supported_formats]
 
         if new_list: #Chequea sí la lista tiene elementos.
             self._path_songs = new_list.copy()
@@ -92,8 +94,11 @@ class MusicPlayer:
         new_list = []
 
         for song in self._path_songs:
-            metadata = TinyTag.get(song)
-            aux = metadata.title + ' - ' + metadata.artist
+            try:
+                metadata = TinyTag.get(song)
+                aux = metadata.title + ' - ' + metadata.artist
+            except:
+                aux = song[song.rfind('/')+1:]
             new_list.append(aux)
     
         self._beautiful_list = new_list.copy()

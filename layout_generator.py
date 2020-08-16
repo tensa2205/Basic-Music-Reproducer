@@ -14,8 +14,8 @@ def get_layout():
         [sg.Text(' '*15), sg.Button(image_filename = 'resources/pause.png',border_width=0, size= (1,1), key = '-PAUSE-',disabled = True)]
     ]
     title = [
-        [sg.Text('Unknown song',font = (None,14), key = '-TITULO-',justification = 'center',size = (25,1),background_color='#C5D1D6')],
-        [sg.Text('Unknown artist',font = (None,11), key = '-ARTISTA-',justification = 'center',size = (25,1),background_color='#C5D1D6')]
+        [sg.Text('Unknown song',font = (None,11), key = '-TITULO-',justification = 'center',size = (50,1),background_color='#C5D1D6', auto_size_text = True)],
+        [sg.Text('Unknown artist',font = (None,14), key = '-ARTISTA-',justification = 'center',size = (50,1),background_color='#C5D1D6', auto_size_text = True)]
     ]
 
     search_end = [

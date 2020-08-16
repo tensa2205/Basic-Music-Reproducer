@@ -10,20 +10,26 @@ sg.theme('Default1')
 def set_metadata(window,player):
     tag = TinyTag.get(player.get_current_song(),image=True)
     artist = tag.artist
+
     try:
         image = convert_to_bytes(tag.get_image(),resize = (210,210))
     except:
-        image = 'resources/defecto.png'
-    window['-TITULO-'].update(tag.title)
+        image = convert_to_bytes('resources/defecto.png',resize = (210,210))
+
+    window['-TITULO-'].update(tag.title if artist != None else 'Unknown song') #Cambía el titulo, sólo si tiene la metadata.
+ 
     if artist != window['-ARTISTA-']: #cambia el artista
-        window['-ARTISTA-'].update(tag.artist)
-    if image != window['-CARATULA-']:
-        window['-CARATULA-'].update(data = image)
+            window['-ARTISTA-'].update(tag.artist if artist != None else 'Unknown artist')
+    if image != window['-CARATULA-']: #cambia la caratula sí es posible
+        try:
+            window['-CARATULA-'].update(data = image)
+        except:
+            window['-CARATULA-'].update(filename = image)
 
 def main():
     layout = get_layout()
 
-    window = sg.Window('Basic Music Reproducer', layout, size = (350,590))
+    window = sg.Window('Basic Music Reproducer', layout, size = (350,600))
     
 
     player = MusicPlayer()
