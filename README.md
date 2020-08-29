@@ -4,6 +4,10 @@ A basic project made by a rookie programmer.
 Hi! welcome to this very-very basic project, got this idea going around my head through some time, so i'm doing my first steps into it using Git,Python (along with amazing libraries) to achieve this.
 You'll probably read spanish comments in the code, that's because i'm from Argentina :D.
 
+- Only tested on W10
+- Supported formats:
+    mp3 , flac, ogg, wav
+
 # Used libraries
 - https://github.com/PySimpleGUI/PySimpleGUI
 - https://pypi.org/project/tinytag/
